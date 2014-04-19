@@ -1,0 +1,11 @@
+{
+    "name": "angular-input-date",
+    "description": "AngularJS directive to enable support for input[type=\"date\"]",
+    "version": "1.0.0",
+    "main": "src/angular-input-date.js",
+    "dependencies": {
+        "angular": "1.2.16"
+    },
+    "devDependencies": {
+    }
+}
