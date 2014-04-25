@@ -24,29 +24,42 @@
         return new Date(year, (month - 1), day);
     }
 
+    /**
+     * Converts DateTime object to Date object.
+     * I.e. truncates time part.
+     * @param dateTime
+     * @constructor
+     */
+    function ExtractDate(dateTime) {
+        return new Date(
+            dateTime.getUTCFullYear(),
+            dateTime.getUTCMonth(),
+            dateTime.getUTCDate()
+        );
+    }
+
     angular.module('ngInputDate', ['ng'])
+        .factory('inputDate', function() {
+            return {
+                ExtractDate: ExtractDate
+            };
+        })
         .directive('input', ['dateFilter', function(dateFilter) {
             return {
                 restrict: 'E',
                 require: '?ngModel',
-                priority: 1,
                 link: function(scope, element, attrs, ngModel) {
                     if (
                            'undefined' !== typeof attrs.type
                         && 'date' === attrs.type
                         && ngModel
                     ) {
-                        ngModel.$render = function() {
-                            element.val(
-                                dateFilter(ngModel.$viewValue, inputDateFormat)
-                            );
-                        };
+                        ngModel.$formatters.push(function(modelValue) {
+                            return dateFilter(modelValue, inputDateFormat);
+                        });
 
-                        element.on('change', function() {
-                            scope.$apply(function() {
-                                var dateString = element.val();
-                                ngModel.$setViewValue(parseDateString(dateString));
-                            });
+                        ngModel.$parsers.push(function(viewValue) {
+                            return parseDateString(viewValue);
                         });
                     }
                 }
