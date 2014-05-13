@@ -9,6 +9,8 @@
      * @returns {Date|null}
      */
     function parseDateString(dateString) {
+        if(typeof dateString === 'undefined'){return null;}
+        
         var parts = dateString.split('-');
         if (3 !== parts.length) {
             return null;
