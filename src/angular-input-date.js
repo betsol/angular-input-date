@@ -5,12 +5,15 @@
 
     /**
      * Converts string representation of date to a Date object.
+     *
      * @param dateString
      * @returns {Date|null}
      */
     function parseDateString(dateString) {
-        if(typeof dateString === 'undefined'){return null;}
-        
+        if ('undefined' === typeof dateString || '' === dateString) {
+            return null;
+        }
+
         var parts = dateString.split('-');
         if (3 !== parts.length) {
             return null;
@@ -28,6 +31,7 @@
 
     /**
      * Converts DateTime object to Date object.
+     *
      * I.e. truncates time part.
      * @param dateTime
      * @constructor

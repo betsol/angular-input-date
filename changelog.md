@@ -1,5 +1,11 @@
 # angular-input-date changelog
 
+## Version 1.0.3
+(13 May 2014)
+
+- Fixed **PR#1**: "*parseDateString returns null on invalid datestring rather than throwing an exception*" by **DigTheDoug**
+- The directive now will be able to handle incorrect input without throwing an exception
+
 ## Version 1.0.2
 (25 Apr 2014)
 
