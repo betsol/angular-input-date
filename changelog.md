@@ -1,5 +1,10 @@
 # angular-input-date changelog
 
+## Version 1.0.4
+(04 Oct 2014)
+
+- Fixed versioning (no changes in code)
+
 ## Version 1.0.3
 (13 May 2014)
 

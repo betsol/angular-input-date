@@ -1,13 +1,13 @@
-# angular-input-date 1.0.3
+# angular-input-date 1.0.4
 
-This module provides a very simple directive to enable support for `input[type="date"]` with the latest stable version of AngularJS (`~1.2`).
+This module provides a very simple directive to enable support for `input[type="date"]` with the latest stable version of AngularJS (`~1.2.26`).
 
 With this, you can implement a simple HTML5 standard datepicker for AngularJS.
 
 Look at the [Demo][demo].
 
-*The latest stable version of AngularJS (`~1.2`) has no support for `input[type="date"]`.
-The support was added only for `~1.3` branch of Angular, which is now in beta.*
+*The latest stable version of AngularJS (`~1.2.26`) has no support for `input[type="date"]`.
+The support was added only for `1.3` branch of Angular, which is now in beta.*
 
 ## Installation
 
