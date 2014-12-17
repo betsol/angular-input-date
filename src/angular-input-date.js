@@ -43,6 +43,14 @@
             dateTime.getUTCDate()
         );
     }
+    function validationRange(selectedDate,scope){
+        var minLimitError = (angular.isDefined(scope.minLimit) && selectedDate < scope.minLimit);
+        var maxLimitError = (angular.isDefined(scope.maxLimit) && selectedDate > scope.maxLimit);
+        if(!selectedDate || minLimitError || maxLimitError){
+            return false;
+        }
+        return true;
+    }
 
     angular.module('ngInputDate', ['ng'])
         .factory('inputDate', function() {
@@ -50,27 +58,47 @@
                 ExtractDate: ExtractDate
             };
         })
-        .directive('input', ['dateFilter', function(dateFilter) {
+        .directive('dateOptions',function(){
+
+            return {
+                restrict: 'A',
+                priority:2,
+                scope:{
+                    minLimit: '=',
+                    maxLimit: '='
+                },
+                require: '?ngModel',
+                link: function(scope, element, attrs, ngModel) {
+                    ngModel.$formatters.push(function(modelValue) {
+                        ngModel.$setValidity('range', validationRange(modelValue, scope));
+                        return modelValue;
+                    });
+                    ngModel.$parsers.push(function(viewValue) {
+                        ngModel.$setValidity('range', validationRange(viewValue, scope));
+                        return viewValue;
+                    });
+
+                }
+            };
+        })
+        .directive('input', ['dateFilter','inputDate', function(dateFilter, inputDate) {
             return {
                 restrict: 'E',
                 require: '?ngModel',
                 link: function(scope, element, attrs, ngModel) {
-                    if (
-                           'undefined' !== typeof attrs.type
-                        && 'date' === attrs.type
-                        && ngModel
-                    ) {
-                        ngModel.$formatters.push(function(modelValue) {
-                            return dateFilter(modelValue, inputDateFormat);
-                        });
-
-                        ngModel.$parsers.push(function(viewValue) {
-                            return parseDateString(viewValue);
-                        });
+                    if (angular.isUndefined(attrs.type) ||
+                        'date' !== attrs.type || !ngModel || !inputDate.enabled) {
+                        return;
                     }
+                    ngModel.$formatters.push(function(modelValue) {
+                        return dateFilter(modelValue, inputDateFormat);
+                    });
+
+                    ngModel.$parsers.push(function(viewValue) {
+                        return parseDateString(viewValue);
+                    });
                 }
-            }
-        }])
-    ;
+            };
+        }]) ;
 
 })(window, angular);
