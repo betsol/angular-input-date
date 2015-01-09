@@ -43,13 +43,21 @@
             dateTime.getUTCDate()
         );
     }
-    function validationRange(selectedDate,scope){
+
+
+    /**
+     * Valide selected date is between range     *
+     * I.e. truncates time part.
+     * @param selectedDate,minLimit,maxLimit
+     * @constructor
+     */
+    function validationRange(selectedDate,minLimit, maxLimit){
         var dateToCompare = selectedDate;
         if(!(selectedDate instanceof Date) && angular.isDefined(selectedDate)){
             dateToCompare = new Date(selectedDate);
         }
-        var minLimitError = (angular.isDefined(scope.minLimit) && dateToCompare < scope.minLimit);
-        var maxLimitError = (angular.isDefined(scope.maxLimit) && dateToCompare > scope.maxLimit);
+        var minLimitError = (angular.isDefined(minLimit) && dateToCompare < minLimit);
+        var maxLimitError = (angular.isDefined(maxLimit) && dateToCompare > maxLimit);
         if(!dateToCompare || minLimitError || maxLimitError){
             return false;
         }
@@ -66,19 +74,22 @@
 
             return {
                 restrict: 'A',
-                priority:1,
                 scope:{
                     minLimit: '=',
                     maxLimit: '='
                 },
                 require: '?ngModel',
                 link: function(scope, element, attrs, ngModel) {
+                    ngModel.$setValidity('required',!( angular.isUndefinedOrNullOrEmpty(ngModel.$modelValue)) );
+
                     ngModel.$formatters.push(function(modelValue) {
-                        ngModel.$setValidity('range', validationRange(modelValue, scope));
+                        ngModel.$setValidity('required',!( angular.isUndefinedOrNullOrEmpty(ngModel.$modelValue)) );
+                        ngModel.$setValidity('range', validationRange(modelValue, scope.minLimit, scope.maxLimit));
                         return modelValue;
                     });
-                    ngModel.$parsers.unshift(function(viewValue) {
-                        ngModel.$setValidity('range', validationRange(viewValue, scope));
+                    ngModel.$parsers.push(function(viewValue) {
+                        ngModel.$setValidity('required',!(angular.isUndefinedOrNullOrEmpty(ngModel.$modelValue)) );
+                        ngModel.$setValidity('range', validationRange(viewValue, scope.minLimit, scope.maxLimit));
                         return viewValue;
                     });
 
