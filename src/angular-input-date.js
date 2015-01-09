@@ -44,9 +44,13 @@
         );
     }
     function validationRange(selectedDate,scope){
-        var minLimitError = (angular.isDefined(scope.minLimit) && selectedDate < scope.minLimit);
-        var maxLimitError = (angular.isDefined(scope.maxLimit) && selectedDate > scope.maxLimit);
-        if(!selectedDate || minLimitError || maxLimitError){
+        var dateToCompare = selectedDate;
+        if(!(selectedDate instanceof Date) && angular.isDefined(selectedDate)){
+            dateToCompare = new Date(selectedDate);
+        }
+        var minLimitError = (angular.isDefined(scope.minLimit) && dateToCompare < scope.minLimit);
+        var maxLimitError = (angular.isDefined(scope.maxLimit) && dateToCompare > scope.maxLimit);
+        if(!dateToCompare || minLimitError || maxLimitError){
             return false;
         }
         return true;
@@ -62,7 +66,7 @@
 
             return {
                 restrict: 'A',
-                priority:2,
+                priority:1,
                 scope:{
                     minLimit: '=',
                     maxLimit: '='
@@ -73,7 +77,7 @@
                         ngModel.$setValidity('range', validationRange(modelValue, scope));
                         return modelValue;
                     });
-                    ngModel.$parsers.push(function(viewValue) {
+                    ngModel.$parsers.unshift(function(viewValue) {
                         ngModel.$setValidity('range', validationRange(viewValue, scope));
                         return viewValue;
                     });
