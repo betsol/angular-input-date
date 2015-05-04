@@ -1,7 +1,7 @@
 {
     "name": "angular-input-date-extended rangeValidation",
     "description": "AngularJS directive to enable support for input[type=\"date\"] added range validation, fork of betsol/angular-input-date",
-    "version": "1.0.6",
+    "version": "1.0.7",
     "main": "src/angular-input-date.js",
     "homepage":"https://github.com/sergicollado/angular-input-date",
     "dependencies": {
