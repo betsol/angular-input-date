@@ -83,12 +83,12 @@
                     ngModel.$setValidity('required',!( angular.isUndefinedOrNullOrEmpty(ngModel.$modelValue)) );
 
                     ngModel.$formatters.push(function(modelValue) {
-                        ngModel.$setValidity('required',!( angular.isUndefinedOrNullOrEmpty(ngModel.$viewValue)) );
+                        ngModel.$setValidity('required',!( angular.isUndefinedOrNullOrEmpty(modelValue)) );
                         ngModel.$setValidity('range', validationRange(modelValue, scope.minLimit, scope.maxLimit));
                         return modelValue;
                     });
                     ngModel.$parsers.push(function(viewValue) {
-                        ngModel.$setValidity('required',!(angular.isUndefinedOrNullOrEmpty(ngModel.$viewValue)) );
+                        ngModel.$setValidity('required',!(angular.isUndefinedOrNullOrEmpty(viewValue)) );
                         ngModel.$setValidity('range', validationRange(viewValue, scope.minLimit, scope.maxLimit));
                         return viewValue;
                     });
