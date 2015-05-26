@@ -4,6 +4,14 @@
     var inputDateFormat = 'yyyy-MM-dd';
 
     /**
+     * Check varible or object to 'is undefined', 'is empty' or 'is null'
+     * @param obj
+    */
+    angular.isUndefinedOrNullOrEmpty = function (obj) {
+        return angular.isUndefined(obj) || obj === null ||  obj.length === 0 || typeof obj === 'object' && Object.keys(obj).length === 0;
+    };
+
+    /**
      * Converts string representation of date to a Date object.
      *
      * @param dateString
@@ -52,12 +60,22 @@
      * @constructor
      */
     function validationRange(selectedDate,minLimit, maxLimit){
+        if(angular.isUndefined(selectedDate)) {
+            return true;
+        }
         var dateToCompare = selectedDate;
-        if(!(selectedDate instanceof Date) && angular.isDefined(selectedDate)){
+        if(!(selectedDate instanceof Date)){
             dateToCompare = new Date(selectedDate);
         }
-        var minLimitError = (angular.isDefined(minLimit) && dateToCompare < minLimit);
-        var maxLimitError = (angular.isDefined(maxLimit) && dateToCompare > maxLimit);
+        if(!(selectedDate instanceof Date) && angular.isDefined(minLimit)){
+            minLimit = new Date(minLimit);
+        }
+        if(!(selectedDate instanceof Date) && angular.isDefined(maxLimit)){
+            maxLimit = new Date(maxLimit);
+        }
+        var minLimitError = (angular.isDefined(minLimit) && minLimit && dateToCompare < minLimit);
+        var maxLimitError = (angular.isDefined(maxLimit) && maxLimit && dateToCompare > maxLimit);
+
         if(!dateToCompare || minLimitError || maxLimitError){
             return false;
         }
