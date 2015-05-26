@@ -52,6 +52,17 @@
         );
     }
 
+    /**
+     * Check variable is instace of Date and return Date obj     *
+     * @param date
+     * @constructor
+     */
+    var formatDate = function(date){
+        if(!(date instanceof Date) && angular.isDefined(date)){
+            date = new Date(date);
+        }
+        return date;
+    };
 
     /**
      * Valide selected date is between range     *
@@ -60,19 +71,15 @@
      * @constructor
      */
     function validationRange(selectedDate,minLimit, maxLimit){
-        if(angular.isUndefined(selectedDate)) {
+        var dateToCompare = selectedDate;
+        if(angular.isUndefined(dateToCompare)) {
             return true;
         }
-        var dateToCompare = selectedDate;
-        if(!(selectedDate instanceof Date)){
-            dateToCompare = new Date(selectedDate);
-        }
-        if(!(selectedDate instanceof Date) && angular.isDefined(minLimit)){
-            minLimit = new Date(minLimit);
-        }
-        if(!(selectedDate instanceof Date) && angular.isDefined(maxLimit)){
-            maxLimit = new Date(maxLimit);
-        }
+
+        dateToCompare = formatDate(selectedDate);
+        minLimit = formatDate(minLimit);
+        maxLimit = formatDate(maxLimit);
+
         var minLimitError = (angular.isDefined(minLimit) && minLimit && dateToCompare < minLimit);
         var maxLimitError = (angular.isDefined(maxLimit) && maxLimit && dateToCompare > maxLimit);
 
@@ -80,6 +87,18 @@
             return false;
         }
         return true;
+    }
+
+    /**
+     * Valide selected date required
+     * @param selectedDate,isRequired
+     * @constructor
+    */
+    function validationRequired(selectedDate, isRequired) {
+        if(!isRequired || angular.isUndefined(isRequired)){
+            return true;
+        }
+        return !(angular.isUndefinedOrNullOrEmpty(selectedDate));
     }
 
     angular.module('ngInputDate', ['ng'])
@@ -93,20 +112,21 @@
             return {
                 restrict: 'A',
                 scope:{
+                    isRequired: '=?ngRequired',
                     minLimit: '=',
                     maxLimit: '='
                 },
                 require: '?ngModel',
                 link: function(scope, element, attrs, ngModel) {
-                    ngModel.$setValidity('required',!( angular.isUndefinedOrNullOrEmpty(ngModel.$modelValue)) );
+                    ngModel.$setValidity('required',validationRequired(ngModel.$modelValue, scope.isRequired));
 
                     ngModel.$formatters.push(function(modelValue) {
-                        ngModel.$setValidity('required',!( angular.isUndefinedOrNullOrEmpty(modelValue)) );
+                        ngModel.$setValidity('required',validationRequired(modelValue, scope.isRequired));
                         ngModel.$setValidity('range', validationRange(modelValue, scope.minLimit, scope.maxLimit));
                         return modelValue;
                     });
-                    ngModel.$parsers.push(function(viewValue) {
-                        ngModel.$setValidity('required',!(angular.isUndefinedOrNullOrEmpty(viewValue)) );
+                    ngModel.$parsers.push(function(viewValue) {                        
+                        ngModel.$setValidity('required',validationRequired(viewValue, scope.isRequired));
                         ngModel.$setValidity('range', validationRange(viewValue, scope.minLimit, scope.maxLimit));
                         return viewValue;
                     });
