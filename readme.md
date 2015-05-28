@@ -1,4 +1,4 @@
-# angular-input-date 1.0.4
+# angular-input-date 1.0.5
 
 This module provides a very simple directive to enable support for `input[type="date"]` with the latest stable version of AngularJS (`~1.2.26`).
 
@@ -84,16 +84,21 @@ application.controller('AppCtrl', function($scope, someExistingDate, inputDate) 
 You have to inject our service called `inputDate` and invoke it's `ExtractDate` method.
 It will return proper timeless `Date` object.
 
-## Feedback
+## Ranges validation
 
-If you have found a bug - please create an issue in this GitHub repository.
+``` html
+<input type="date" date-options min-limit="startDate" max-limit="endDate"  ng-model="myDateObject">
+```
 
-If you have a question - file it with [StackOverflow][so-ask] and send me a
-link to [s.fomin@betsol.ru][email].
+You can specify scope value in your controller like this:
 
-Have any ideas or propositions? Feel free to contact me by the same [E-Mail address][email].
-
-Cheers!
+``` javascript
+application.controller('AppCtrl', function($scope) {
+    $scope.myDateObject = new Date(2014, 3, 19);
+    $scope.startDate = new Date(2014, 3, 16);
+    $scope.endDate = new Date(2014, 3, 23);
+});
+```
 
 ## License
 
